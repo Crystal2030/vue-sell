@@ -19,3 +19,11 @@ npm run build --report
 ```
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+
+# 配置文件介绍
+- .babelrc： babel的一些配置
+- .editorconfig： 编辑器的配置
+- .eslingignore: 忽略语法检查的目录文件
+- .eslintrc： eslint的配置文件
+- .postcssrc.js
