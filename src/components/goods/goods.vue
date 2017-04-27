@@ -15,7 +15,7 @@
         <li v-for="item in goods" class="food-list" >
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li v-for="food in item.foods" class="food-item border-1px">
+            <li @click="selectFood(food, $event)" v-for="food in item.foods" class="food-item border-1px">
               <div class="icon">
                 <img width="57" height="57" :src="food.icon">
               </div>
@@ -29,16 +29,23 @@
                   <span class="now">￥{{food.price}}</span><span class="old"
                                                                 v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
 <script>
+  import shopcart from '@/components/shopcart/shopcart';
+  import cartcontrol from '@/components/cartcontrol/cartcontrol';
+  import food from '@/components/food/food';
   const ERR_OK = 0;
 
   export default {
@@ -49,7 +56,8 @@
     },
     data() {
         return {
-            goods: []
+            goods: [],
+            selectedFood: {}
         };
     },
     created() {
@@ -61,6 +69,22 @@
             }
         });
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+    },
+    methods: {
+      selectFood (food, event) {
+        console.log(event);
+
+//        if (!event._constructed) {
+//          return;
+//        }
+        this.selectedFood = food;
+        this.$refs.food.show();
+      }
+    },
+    components: {
+        shopcart,
+        cartcontrol,
+        food
     }
   };
 </script>
