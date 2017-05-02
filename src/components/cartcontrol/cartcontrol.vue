@@ -18,24 +18,26 @@
         type: Object
       }
     },
+    created() {
+//        console.log(this.food);
+    },
     methods: {
-      addCart(event) {
-        if (!event._coustructed) {
-          return;
+      addCart() {
+        if (!event._constructed) {
+            return;
         }
         if (!this.food.count) {
           Vue.set(this.food, 'count', 1);
         } else {
-          this.food.count++;
+            this.food.count++;
         }
-        this.$emit('add', event.target);
       },
-      decreaseCart(event) {
+      decreaseCart() {
         if (!event._constructed) {
           return;
         }
         if (this.food.count) {
-          this.food.count--;
+            this.food.count--;
         }
       }
     }
