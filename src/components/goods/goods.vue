@@ -37,6 +37,7 @@
           </ul>
         </li>
       </ul>
+      <shopcart  :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice" ></shopcart>
     </div>
     <food :food="selectedFood" ref="food"></food>
   </div>
@@ -136,9 +137,9 @@
       }
     },
     components: {
-        shopcart,
-        cartcontrol,
-        food
+      shopcart,
+      cartcontrol,
+      food
     }
   };
 </script>
