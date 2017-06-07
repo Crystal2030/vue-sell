@@ -60,9 +60,9 @@
                   <p class="content">{{seller.bulletin}}</p>
                 </div>
               </div>
-              <div class="detail-close" @click="hideDetail">
-                <i class="icon-close"></i>
-              </div>
+            </div>
+            <div class="detail-close" @click="hideDetail">
+              <i class="icon-close"></i>
             </div>
           </div>
         </transition>
@@ -215,7 +215,7 @@
             filter: blur(10px)
         .detail
             position: fixed
-            z-index: 10
+            z-index: 60
             top: 0
             left: 0
             width: 100%
@@ -299,7 +299,7 @@
                 position: relative
                 width: 32px
                 height: 32px
-                margin: 0 auto
+                margin: -64px auto 0 auto
                 clear: both
                 font-size: 32px
 

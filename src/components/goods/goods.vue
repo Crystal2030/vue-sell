@@ -37,7 +37,8 @@
           </ul>
         </li>
       </ul>
-      <shopcart :selectFoods="selectFoods"  :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice" ></shopcart>
+      <shopcart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice"
+                :minPrice="seller.minPrice"></shopcart>
     </div>
     <food :food="selectedFood" ref="food"></food>
   </div>
@@ -110,7 +111,6 @@
         console.log(index);
         let foodList = this.$refs.foodList;
         let el = foodList[index];
-        console.log(el);
         this.foodsScroll.scrollToElement(el, 300);
       },
       selectFood (food, event) {
@@ -121,6 +121,13 @@
 //        }
         this.selectedFood = food;
         this.$refs.food.show();
+      },
+      _drop(target) {
+        // 体验优化，异步执行下落动画
+        this.$nextTick(() => {
+            alert(this.$refs);
+          this.$refs.shopcart.drop(target);
+        });
       },
       _initScroll() {
         this.meunScroll = new BScroll(this.$refs.menuWrapper, {
