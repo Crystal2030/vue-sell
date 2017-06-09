@@ -133,7 +133,7 @@
         this.meunScroll = new BScroll(this.$refs.menuWrapper, {
           click: true
         });
-
+        // probeType:3 => scroll滚动的时候实时告诉我们滚动的位置
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
           click: true,
           probeType: 3
@@ -152,6 +152,7 @@
           height += item.clientHeight;
           this.listHeight.push(height);
         }
+        console.log(this.listHeight);
       }
     },
     components: {
