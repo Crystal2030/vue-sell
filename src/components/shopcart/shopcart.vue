@@ -110,8 +110,7 @@
     },
     methods: {
         drop(el) {
-            alert(111);
-          console.log(el);
+          console.log(el, '333');
         }
     }
 
