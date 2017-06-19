@@ -3,7 +3,8 @@
     <div class="content">
       <div class="content-left">
         <div class="logo-wrapper">
-          <div class="logo" :class="{'highlight': totalCount > 0}"><i class="icon-shopping_cart" :class="{'highlight': totalCount > 0}"></i></div>
+          <div class="logo" :class="{'highlight': totalCount > 0}"><i class="icon-shopping_cart"
+                                                                      :class="{'highlight': totalCount > 0}"></i></div>
           <div class="num" v-show="totalPrice > 0">{{totalCount}}</div>
         </div>
         <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
@@ -18,7 +19,7 @@
     <div class="ball-container">
       {{balls}}
       <div v-for="ball in balls">
-        <transition name="drop" >
+        <transition name="drop" @before-enter="beforeDrop" @enter="dropping" @after-enter="afterDrop">
           <div class="ball" v-show="ball.show">
             <div class="inner inner-hook"></div>
           </div>
@@ -29,19 +30,19 @@
 </template>
 
 <script>
-//  import BScroll from 'better-scroll';
+  //  import BScroll from 'better-scroll';
 
   export default {
     props: {
       selectFoods: {
         type: Array,
         default() {
-            return [
-              {
-                price: 10,
-                count: 1
-              }
-            ];
+          return [
+            {
+              price: 10,
+              count: 1
+            }
+          ];
         }
       },
       deliveryPrice: {
@@ -71,49 +72,97 @@
           {
             show: false
           }
-        ]
+        ],
+        // 已经下落的小球
+        dropBalls: []
       };
     },
     computed: {
       totalPrice() {
         let total = 0;
         this.selectFoods.forEach((food) => {
-            total += food.price * food.count;
+          total += food.price * food.count;
         });
         return total;
       },
       totalCount() {
         let count = 0;
         this.selectFoods.forEach((food) => {
-            count += food.count;
+          count += food.count;
         });
         return count;
       },
       payDesc() {
-         if (this.totalPrice === 0) {
-             return `￥${this.minPrice}元起送`;
-         } else if (this.totalPrice < this.minPrice) {
-             let diff = this.minPrice - this.totalPrice;
-             return `还差￥${diff}元起送`;
-         } else {
-             return '去结算';
-         }
+        if (this.totalPrice === 0) {
+          return `￥${this.minPrice}元起送`;
+        } else if (this.totalPrice < this.minPrice) {
+          let diff = this.minPrice - this.totalPrice;
+          return `还差￥${diff}元起送`;
+        } else {
+          return '去结算';
+        }
       },
       payClass() {
-          if (this.totalPrice < this.minPrice) {
-              return 'not-enough';
-          } else {
-              return 'enough';
-          }
+        if (this.totalPrice < this.minPrice) {
+          return 'not-enough';
+        } else {
+          return 'enough';
+        }
       }
 
     },
     methods: {
-        drop(el) {
-          console.log(el, '333');
+      drop(el) {
+        console.log(el, '333');
+        for (let i = 0; i < this.balls.length; i++) {
+          let ball = this.balls[i];
+          if (!ball.show) {
+            ball.show = true;
+            ball.el = el;
+            this.dropBalls.push(ball);
+            console.log(this.dropBalls);
+            return;
+          }
         }
+      },
+      beforeDrop(el) {
+        let count = this.balls.length;
+        while (count--) {
+          let ball = this.balls[count];
+          if (ball.show) {
+            let rect = ball.el.getBoundingClientRect();
+            console.log(ball.el.getBoundingClientRect(), '222');
+            let x = rect.left - 32;
+            let y = -(window.innerHeight - rect.top - 22);
+            el.style.display = '';
+            el.style.webkitTransform = `translate3d(0, ${y}px, 0)`;
+            el.style.transform = `translate3d(0, ${y}px, 0)`;
+            let inner = el.getElementsByClassName('inner-hook')[0];
+            inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`;
+            inner.style.transform = `translate3d(${x}px, 0, 0)`;
+          }
+        }
+      },
+      dropping(el, done) {
+        /* eslint-disable no-unused-vars */
+        let rf = el.offsetHeight;
+        this.$nextTick(() => {
+          el.style.webkitTransform = 'translate3d(0,0,0)';
+          el.style.transform = 'translate3d(0,0,0)';
+          let inner = el.getElementsByClassName('inner-hook')[0];
+          inner.style.webkitTransform = 'translate3d(0,0,0)';
+          inner.style.transform = 'translate3d(0,0,0)';
+          el.addEventListener('transitionend', done);
+        });
+      },
+      afterDrop(el) {
+        let ball = this.dropBalls.shift();
+        if (ball) {
+          ball.show = false;
+          el.style.display = 'none';
+        }
+      }
     }
-
   };
 </script>
 
@@ -159,7 +208,7 @@
           .num
             position: absolute
             top: 0
-            right:0
+            right: 0
             width: 24px
             height: 16px
             line-height: 16px
@@ -180,7 +229,7 @@
           font-size: 16px
           font-weight: 700
           &.highlight
-            color:#fff
+            color: #fff
         .desc
           display: inline-block
           vertical-align: top
