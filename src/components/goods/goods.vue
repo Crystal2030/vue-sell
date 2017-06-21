@@ -1,15 +1,16 @@
 <template>
   <div class="goods">
-      <div class="menu-wrapper" ref="menuWrapper">
-        <ul>
-          <li v-for="(item, index) in goods" class="menu-item" :class="{'current': currentIndex === index}" @click="selectMenu(index, $event)">
+    <div class="menu-wrapper" ref="menuWrapper">
+      <ul>
+        <li v-for="(item, index) in goods" class="menu-item" :class="{'current': currentIndex === index}"
+            @click="selectMenu(index, $event)">
             <span class="text border-1px">
               <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
               {{item.name}}
             </span>
-          </li>
-        </ul>
-      </div>
+        </li>
+      </ul>
+    </div>
     <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
         <li v-for="item in goods" class="food-list" ref="foodList">
@@ -53,60 +54,60 @@
 
   export default {
     props: {
-        seller: {
-            type: Object
-        }
+      seller: {
+        type: Object
+      }
     },
     data() {
-        return {
-            goods: [],
-            listHeight: [],
-            scrollY: 0,
-            selectedFood: {}
-        };
+      return {
+        goods: [],
+        listHeight: [],
+        scrollY: 0,
+        selectedFood: {}
+      };
     },
     computed: {
       currentIndex() {
-          for (let i = 0; i < this.listHeight.length; i++) {
-              let height1 = this.listHeight[i];
-              let height2 = this.listHeight[i + 1];
-              if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
-                  return i;
-              }
+        for (let i = 0; i < this.listHeight.length; i++) {
+          let height1 = this.listHeight[i];
+          let height2 = this.listHeight[i + 1];
+          if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+            return i;
           }
-          return 0;
+        }
+        return 0;
       },
       selectFoods() {
         let foods = [];
         this.goods.forEach((good) => {
-            good.foods.forEach((food) => {
-              if (food.count) {
-                foods.push(food);
-              }
-            });
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food);
+            }
+          });
         });
         return foods;
       }
     },
     created() {
-        this.$http.get('/api/goods').then((response) => {
-            response = response.body;
-            if (response.errno === ERR_OK) {
-                this.goods = response.data;
+      this.$http.get('/api/goods').then((response) => {
+        response = response.body;
+        if (response.errno === ERR_OK) {
+          this.goods = response.data;
 
-                this.$nextTick(() => {
-                  this._initScroll();
-                  this._calculateHeight();
-                });
-            }
-        });
+          this.$nextTick(() => {
+            this._initScroll();
+            this._calculateHeight();
+          });
+        }
+      });
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
     },
     methods: {
       selectMenu(index, event) {
         // 阻止浏览器原生的点击事件
         if (!event._constructed) {
-            return;
+          return;
         }
         console.log(index);
         let foodList = this.$refs.foodList;
@@ -114,11 +115,9 @@
         this.foodsScroll.scrollToElement(el, 300);
       },
       selectFood (food, event) {
-        console.log(event);
-
-//        if (!event._constructed) {
-//          return;
-//        }
+        if (!event._constructed) {
+          return;
+        }
         this.selectedFood = food;
         this.$refs.food.show();
       },
@@ -192,7 +191,7 @@
           background: #fff
           font-weight: 700
           .text
-              border-none()
+            border-none()
       .icon
         display: inline-block
         vertical-align: top
@@ -270,8 +269,6 @@
             position: absolute
             right: 0
             bottom: 12px
-
-
 
 
 </style>
